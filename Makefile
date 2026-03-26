@@ -49,24 +49,21 @@ SRC_DIR   := $(LOC)
 # https://make.mad-scientist.net/papers/advanced-auto-dependency-generation/#tldr
 DEP_FLAGS  = -MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d
 
-NAMES     := life multithreaded_life granular_multithreaded_life
+NAMES     := openmp_life granular_openmp_life
 SRCS      := $(wildcard $(SRC_DIR)/*.c)
 BINS      := $(NAMES:%=$(BIN_DIR)/%)
 OBJS       = $(patsubst $(SRC_DIR)/%.h,$(OBJ_DIR)/%.o,$(wildcard $(SRC_DIR)/*.h))
 
 
-.PHONY: clean all life multi gran list_bins
+.PHONY: clean all open gran list_bins
 
-all: life multi gran
-
-
-life: $(BIN_DIR)/life
+all: multi gran
 
 
-multi: $(BIN_DIR)/multithreaded_life
+open: $(BIN_DIR)/openmp_life
 
 
-gran: $(BIN_DIR)/granular_multithreaded_life
+gran: $(BIN_DIR)/granular_openmp_life
 
 
 $(BIN_DIR) $(OBJ_DIR) $(DEP_DIR): %:
