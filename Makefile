@@ -5,7 +5,7 @@ CFLAGS    += -Wall -Wextra -Wformat=2 -Wswitch-default -Wcast-align \
 	     -Wpointer-arith -Wbad-function-cast -Wstrict-prototypes -Winline \
 	     -Wundef -Wnested-externs -Wcast-qual -Wshadow -Wwrite-strings \
 	     -Wconversion -Wunreachable-code -Wstrict-aliasing=2 -fno-common \
-	     -fstrict-aliasing -std=c99 -pedantic
+	     -fstrict-aliasing -std=c99 -pedantic -fopenmp
 	     
 DBG_FLAGS  = -O0 -g -include stdbool.h
 REL_FLAGS  = -O3

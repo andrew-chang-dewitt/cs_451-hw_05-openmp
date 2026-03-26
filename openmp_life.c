@@ -43,6 +43,7 @@ valgrind -s --leak-check=full --show-leak-kinds=all \
 // Posted by Shawn, modified by community. See post 'Timeline' for change
 // history Retrieved 2026-02-20, License - CC BY-SA 4.0
 
+#include "omp.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,6 +63,13 @@ int main(int argc, char *const *argv) {
   Config cfg = parse_args(argc, argv);
   // initialize state obj
   char *world_history = init_world(cfg.size, cfg.cycles, cfg.init_world);
+
+  // set up openmp
+  // take control of how many threads are created by disabling dynamic teams
+  // see SO: https://stackoverflow.com/a/11096742
+  omp_set_dynamic(0);
+  // hard-code thread counts based on config
+  omp_set_num_threads(cfg.num_parts);
 
   // print initial state as first step
   print_world(world_history, cfg.size, 0);
@@ -86,9 +94,22 @@ int main(int argc, char *const *argv) {
     cur_step = new_step;
     new_step = cur_step + (cfg.size * cfg.size);
 
-    for (unsigned int p = 0; p < cfg.num_parts; p++) {
-      step_part(cur_step, part_offsets[p][0], part_offsets[p][1], cfg.size,
-                new_step);
+#pragma omp parallel
+    {
+#ifdef VERBOSE
+#pragma omp master
+      printf("[main()] in parallel region with %d threads\n",
+             omp_get_num_threads());
+#endif
+#pragma omp for
+      for (unsigned int p = 0; p < cfg.num_parts; p++) {
+#ifdef VERBOSE
+        printf("[main()] thread num %d working on part_num %d\n",
+               omp_get_thread_num(), p);
+#endif
+        step_part(cur_step, part_offsets[p][0], part_offsets[p][1], cfg.size,
+                  new_step);
+      }
     }
 
     // then print that step

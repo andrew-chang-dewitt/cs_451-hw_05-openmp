@@ -16,16 +16,18 @@ life_dbg=$dbg_bin_dir/openmp_life
 # 1 1 1 0 -> 0 1 0 0 _ _ _ _ _
 # 0 0 0 0 <- 0 1 0 0
 # 0 0 0 0    0 0 0 0  part 2
-args=" -s 4 -c 5 -i 0000111"
+# args=" -s 4 -c 5 -i 0000111"
+# args=" -s 4 -g 2 -c 5 -i 0000111"
 # glider & blinker
 # args=" -s 10 -c 100 -i 010000000000100011101110000000"
 # args=" -s 50 -c 100 -i 010000000000000000000000000000000000000000000000000010001110000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000"
+args=" -s 50 -g 10 -c 100 -i 010000000000000000000000000000000000000000000000000010001110000000000000000000000000000000000000000011100000000000000000000000000000000000000000000000"
 
 # build
 echo "Building life binaries..."
 echo ""
 cd $life_dir
-make PRETTY=true DBG=true open || { x=$? printf "\nfailed while building, bailing...\n\n\n"; exit $x; }
+make VERBOSE=true PRETTY=true DBG=true open || { x=$? printf "\nfailed while building, bailing...\n\n\n"; exit $x; }
 echo ""
 echo "Executing open w/ args '$args'..."
 echo ""
