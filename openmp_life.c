@@ -43,7 +43,7 @@ valgrind -s --leak-check=full --show-leak-kinds=all \
 // Posted by Shawn, modified by community. See post 'Timeline' for change
 // history Retrieved 2026-02-20, License - CC BY-SA 4.0
 
-#include "omp.h"
+#include <omp.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,8 +68,8 @@ int main(int argc, char *const *argv) {
   // take control of how many threads are created by disabling dynamic teams
   // see SO: https://stackoverflow.com/a/11096742
   omp_set_dynamic(0);
-  // hard-code thread counts based on config
-  omp_set_num_threads(cfg.num_parts);
+  // set thread counts based on config
+  omp_set_num_threads((int)cfg.num_parts);
 
   // print initial state as first step
   print_world(world_history, cfg.size, 0);
